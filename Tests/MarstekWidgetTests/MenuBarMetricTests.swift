@@ -23,6 +23,15 @@ import Testing
     #expect(menuBarLines(status(grid: 0, load: 1500), [.grid, .load]) == ["0 W", "1.5 kW ↑"])
 }
 
+// Firmware v150 sends offgrid_power as unsigned 16-bit: 65519 is -17 W.
+@Test func loadReadsWrappedUInt16AsSignedNoise() {
+    var s = CombinedStatus()
+    s.esStatus = ESStatus(id: 0, batSoc: nil, batCap: nil, pvPower: nil, ongridPower: -2490, offgridPower: 65519,
+                          totalPvEnergy: nil, totalGridOutputEnergy: nil, totalGridInputEnergy: nil, totalLoadEnergy: nil)
+    #expect(s.offgridPower == -17)
+    #expect(menuBarLines(s, [.grid, .load]) == ["2.5 kW ↓", "0 W"])
+}
+
 @Test func chargingIconWhenFlagsSayChargingOrGridFlowsIn() {
     func status(charging: Bool, discharging: Bool, grid: Int? = nil) -> CombinedStatus {
         var s = CombinedStatus()

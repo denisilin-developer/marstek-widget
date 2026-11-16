@@ -40,7 +40,8 @@ func showsBatteryGlyph(leading: MenuBarMetric, leadingText: String?, lines: [Str
 }
 
 func formatFlow(_ watts: Int, positive: String, negative: String) -> String {
-    watts == 0 ? formatPower(0) : "\(formatPower(abs(watts))) \(watts > 0 ? positive : negative)"
+    abs(watts) < CombinedStatus.gridPresentThreshold
+        ? formatPower(0) : "\(formatPower(abs(watts))) \(watts > 0 ? positive : negative)"
 }
 
 func formatPower(_ watts: Int) -> String {

@@ -126,8 +126,9 @@ struct CombinedStatus {
         gridPower.map { abs($0) >= Self.gridPresentThreshold }
     }
 
+    // Firmware sends this one as unsigned 16-bit, so small negatives arrive as ~65500.
     var offgridPower: Int? {
-        esStatus?.offgridPower
+        esStatus?.offgridPower.map { Int(Int16(truncatingIfNeeded: $0)) }
     }
 
     var batteryTemp: Double? {

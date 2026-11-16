@@ -127,7 +127,7 @@ struct StatusMenuView: View {
         }
 
         if let offgrid = s.offgridPower {
-            StatusRow(icon: "house", label: "Load Power", value: formatPower(offgrid))
+            StatusRow(icon: "house", label: "Load Power", value: formatPower(abs(offgrid) < CombinedStatus.gridPresentThreshold ? 0 : offgrid))
         }
 
         if let temp = s.batteryTemp {
